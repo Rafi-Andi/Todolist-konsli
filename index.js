@@ -2,45 +2,49 @@ const inputTodo = document.getElementById("input-todo");
 const tambahBTN = document.getElementById("btntambah-todo");
 const content = document.getElementById("content");
 
+console.log(content);
 inputTodo.focus();
 
 tambahBTN.addEventListener("click", () => {
   if (inputTodo.value.trim() !== "") {
     const todo = document.createElement("div");
     todo.classList.add("todo");
-    todo.innerHTML = `
-            <h4>${inputTodo.value}</h4>
-                        <div>
-              <input
-                type="button"
-                value="Edit"
-                id="btnEdit-todo"
-                style="
-                  border: none;
-                  outline: none;
-                  padding: 5px 20px;
-                  border-radius: 5px;
-                  background-color: blue;
-                  color: white;
-                  font-weight: 600;
-                "
-              />
-              <input
-                type="button"
-                value="Delete"
-                id="btnDelete-todo"
-                style="
-                  border: none;
-                  outline: none;
-                  padding: 5px 20px;
-                  border-radius: 5px;
-                  background-color: red;
-                  color: white;
-                  font-weight: 600;
-                "
-              />
-            </div>
-        `;
+
+    const spanText = document.createElement("span");
+    spanText.textContent = inputTodo.value;
+
+    const divButton = document.createElement("div");
+
+    const editButton = document.createElement("button");
+    editButton.classList.add("btn-edit");
+    editButton.textContent = "Edit";
+
+    const deleteButton = document.createElement("button");
+    deleteButton.classList.add("btn-delete");
+    deleteButton.textContent = "Delete";
+
+    editButton.addEventListener("click", () => {
+      inputTodo.value = spanText.textContent;
+      console.log(spanText.textContent);
+      tambahBTN.value = "Update";
+      tambahBTN.style.backgroundColor = "green";
+
+      tambahBTN.addEventListener("click", () => {
+        spanText.textContent = inputTodo.value;
+        todo.remove();
+
+        tambahBTN.value = "Tambah";
+        tambahBTN.style.backgroundColor = "blue";
+      });
+    });
+
+    deleteButton.addEventListener("click", () => {
+      todo.remove();
+    });
+
+    divButton.append(editButton, deleteButton);
+
+    todo.append(spanText, divButton);
     content.append(todo);
     inputTodo.value = "";
     inputTodo.focus();
