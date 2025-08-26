@@ -1,53 +1,65 @@
 const inputTodo = document.getElementById("input-todo");
 const tambahBTN = document.getElementById("btntambah-todo");
 const content = document.getElementById("content");
+let editItem = null;
 
 console.log(content);
 inputTodo.focus();
 
 tambahBTN.addEventListener("click", () => {
   if (inputTodo.value.trim() !== "") {
-    const todo = document.createElement("div");
-    todo.classList.add("todo");
+    if (editItem) {
+      const span = editItem.querySelector("span");
+      span.textContent = inputTodo.value.trim();
+      tambahBTN.style.backgroundColor = "blue";
+      tambahBTN.style.color = "white";
+      tambahBTN.value = "Tambah";
 
-    const spanText = document.createElement("span");
-    spanText.textContent = inputTodo.value;
+      editItem = null;
+      inputTodo.value = "";
+      inputTodo.focus();
+    } else {
+      const todo = document.createElement("div");
+      todo.classList.add("todo");
 
-    const divButton = document.createElement("div");
+      const spanText = document.createElement("span");
+      spanText.textContent = inputTodo.value;
 
-    const editButton = document.createElement("button");
-    editButton.classList.add("btn-edit");
-    editButton.textContent = "Edit";
+      const divButton = document.createElement("div");
 
-    const deleteButton = document.createElement("button");
-    deleteButton.classList.add("btn-delete");
-    deleteButton.textContent = "Delete";
+      const editButton = document.createElement("button");
+      editButton.classList.add("btn-edit");
+      editButton.textContent = "Edit";
 
-    editButton.addEventListener("click", () => {
-      inputTodo.value = spanText.textContent;
-      console.log(spanText.textContent);
-      tambahBTN.value = "Update";
-      tambahBTN.style.backgroundColor = "green";
+      const deleteButton = document.createElement("button");
+      deleteButton.classList.add("btn-delete");
+      deleteButton.textContent = "Delete";
 
-      tambahBTN.addEventListener("click", () => {
-        spanText.textContent = inputTodo.value;
-        todo.remove();
-
-        tambahBTN.value = "Tambah";
-        tambahBTN.style.backgroundColor = "blue";
+      editButton.addEventListener("click", () => {
+        inputTodo.value = spanText.textContent;
+        console.log(spanText.textContent);
+        tambahBTN.value = "Update";
+        tambahBTN.style.backgroundColor = "green";
+        inputTodo.focus();
+        editItem = todo;
       });
-    });
 
-    deleteButton.addEventListener("click", () => {
-      todo.remove();
-    });
+      deleteButton.addEventListener("click", () => {
+        if (confirm("Yakin untuk menghapus")) {
+          todo.remove();
+          inputTodo.focus()
+        } else {
+          inputTodo.focus()
+        }
+      });
 
-    divButton.append(editButton, deleteButton);
+      divButton.append(editButton, deleteButton);
 
-    todo.append(spanText, divButton);
-    content.append(todo);
-    inputTodo.value = "";
-    inputTodo.focus();
+      todo.append(spanText, divButton);
+      content.append(todo);
+      inputTodo.value = "";
+      inputTodo.focus();
+    }
   } else {
     alert("tidak boleh kosong");
   }
